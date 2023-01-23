@@ -1,5 +1,5 @@
 import { WebSocketServer, createWebSocketStream } from 'ws';
-import { mouseCommand } from '../commands/mouse';
+import { duplexDataHandler } from '../duplex-data-handler';
 
 // <- mouse_up {y px}
 // <- mouse_down {y px}
@@ -22,32 +22,11 @@ export const createWSServer = (port: number) => {
   });
 
   wss.on('connection', async function connection(ws) {
-    console.log('connection start!');
+    console.log('Connection start!');
 
     const duplex = createWebSocketStream(ws, { encoding: 'utf8', decodeStrings: false });
 
-    duplex.on('data', (data) => {
-      const [fullCommand, ...value] = data.split(' ')
-      const [command, action] = fullCommand.split('_')
-
-      switch (command) {
-        case 'mouse':
-          mouseCommand(duplex, action, value)
-          break;
-
-        case 'draw':
-          
-          break;
-
-        case 'prnt':
-          
-          break;
-      
-        default:
-          console.log(`What the hell? What's the command: ${command}?`);
-          break;
-      }
-    })
+    duplex.on('data', (data) => duplexDataHandler(duplex, data))
 
   
     ws.send('connected');
