@@ -22,15 +22,23 @@ export const createWSServer = (port: number) => {
   });
 
   wss.on('connection', async function connection(ws) {
-    console.log('Connection start!');
-
     const duplex = createWebSocketStream(ws, { encoding: 'utf8', decodeStrings: false });
-
     duplex.on('data', (data) => duplexDataHandler(duplex, data))
-
-  
+    
     ws.send('connected');
+    ws.on('close', () => console.log(`Connection closed!`));
+
+    console.log('Connection start!');
   });
 
-  return wss;
+  process.on('SIGINT', () => {
+    process.exit();
+  });
+
+  process.on('exit', () => {
+    wss.clients.forEach((ws) => ws.terminate())
+    wss.close();
+
+    console.log('Web socket server connection closed');
+  });
 }
