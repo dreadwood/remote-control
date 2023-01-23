@@ -1,0 +1,13 @@
+{
+  "name": "remote-control",
+  "description": "This repository implements Websocket Remote Control task from https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/remote-control/assignment.md",
+  "author": "dreadwood",
+  "keywords": [
+    "dreadwood",
+    "rsshool"
+  ],
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
